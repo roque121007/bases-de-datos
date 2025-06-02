@@ -5,5 +5,5 @@ app = FastAPI()
 
 @app.get("/datos")
 def obtener_datos():
-    df = pd.read_excel("plantilla_base_de_datos.xlsx")
+    df = pd.read_excel("datos.xlsx")
     return df.to_dict(orient="records")
