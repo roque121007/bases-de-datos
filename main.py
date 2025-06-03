@@ -3,6 +3,10 @@ import pandas as pd
 
 app = FastAPI()
 
+@app.get("/")
+def root():
+    return {"mensaje": "API funcionando. Visita /personas para obtener los datos."}
+
 @app.get("/personas")
 def obtener_personas():
     try:
