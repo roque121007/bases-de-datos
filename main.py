@@ -11,6 +11,6 @@ def root():
 def obtener_personas():
     try:
         df = pd.read_excel("base_de_datos.xlsx")
-        return {"personas": df.to_dict(orient="records")}
+        return {"Reporte de Monitoreo de Asignaciones de Tutores y Tutorados ": df.to_dict(orient="records")}
     except Exception as e:
         return {"error": str(e)}
