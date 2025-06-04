@@ -15,7 +15,7 @@ def root():
     return {"mensaje": "API funcionando. Usa /tutor, /tutorado o /tutor_anterior para obtener los datos."}
 
 
-@app.get("/tutor")
+@app.get("/Datos Tutor")
 def datos_tutor():
     if df is None:
         return {"error": "No se pudo cargar el archivo Excel"}
@@ -28,7 +28,7 @@ def datos_tutor():
     return {"datos_tutor": df[columnas_tutor].to_dict(orient="records")}
 
 
-@app.get("/tutor_anterior")
+@app.get("/Datos Tutor Anterior")
 def datos_tutor_anterior():
     if df is None:
         return {"error": "No se pudo cargar el archivo Excel"}
@@ -38,7 +38,7 @@ def datos_tutor_anterior():
     return {"datos_tutor_anterior": df[columnas_tutor_anterior].to_dict(orient="records")}
 
 
-@app.get("/tutorado")
+@app.get("/Datos Tutorado")
 def datos_tutorado():
     if df is None:
         return {"error": "No se pudo cargar el archivo Excel"}
