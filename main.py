@@ -10,15 +10,30 @@ def root():
 @app.get("/personas")
 def obtener_personas():
     try:
-        # Cargar todas las hojas del archivo Excel
-        excel_data = pd.read_excel("base_de_datos.xlsx", sheet_name=None)
+        df = pd.read_excel("base_de_datos.xlsx", sheet_name=0, header=None)  # leer sin encabezado
+        secciones = {}
+        current_section = None
+        current_data = []
 
-        # Convertir cada hoja a lista de diccionarios
-        resultado = {}
-        for nombre_hoja, df in excel_data.items():
-            resultado[nombre_hoja] = df.to_dict(orient="records")
+        for index, row in df.iterrows():
+            first_cell = str(row[0]).strip() if not pd.isna(row[0]) else ""
 
-        return resultado
+            # Detectar títulos
+            if first_cell == "Datos Tutor" or first_cell == "Datos Tutorado" or first_cell == "Datos Tutor anterior":
+                # Guardar sección anterior si hay
+                if current_section and current_data:
+                    secciones[current_section] = pd.DataFrame(current_data[1:], columns=current_data[0]).to_dict(orient="records")
+                    current_data = []
+                current_section = first_cell
+            elif current_section:
+                # Agregar fila a sección actual
+                current_data.append(row.tolist())
+
+        # Guardar la última sección
+        if current_section and current_data:
+            secciones[current_section] = pd.DataFrame(current_data[1:], columns=current_data[0]).to_dict(orient="records")
+
+        return secciones
 
     except Exception as e:
         return {"error": str(e)}
