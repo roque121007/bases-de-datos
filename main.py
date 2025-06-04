@@ -10,28 +10,27 @@ def root():
 @app.get("/personas")
 def obtener_personas():
     try:
-        df = pd.read_excel("base_de_datos.xlsx", sheet_name=0, header=None)  # leer sin encabezado
+        df = pd.read_excel("base_de_datos.xlsx", header=None)
+        
+        # Buscar los índices donde aparecen los títulos
         secciones = {}
-        current_section = None
-        current_data = []
+        indices = {}
+        for i, row in df.iterrows():
+            value = str(row[0]).strip() if not pd.isna(row[0]) else ""
+            if value in ["Datos Tutor", "Datos Tutorado", "Datos Tutor anterior"]:
+                indices[value] = i
+        
+        # Ordenar por posición en el archivo
+        orden = sorted(indices.items(), key=lambda x: x[1])
+        for idx, (nombre, fila_inicio) in enumerate(orden):
+            fila_titulo = fila_inicio + 1
+            fila_datos = fila_inicio + 2
+            fila_fin = orden[idx + 1][1] if idx + 1 < len(orden) else len(df)
 
-        for index, row in df.iterrows():
-            first_cell = str(row[0]).strip() if not pd.isna(row[0]) else ""
-
-            # Detectar títulos
-            if first_cell == "Datos Tutor" or first_cell == "Datos Tutorado" or first_cell == "Datos Tutor anterior":
-                # Guardar sección anterior si hay
-                if current_section and current_data:
-                    secciones[current_section] = pd.DataFrame(current_data[1:], columns=current_data[0]).to_dict(orient="records")
-                    current_data = []
-                current_section = first_cell
-            elif current_section:
-                # Agregar fila a sección actual
-                current_data.append(row.tolist())
-
-        # Guardar la última sección
-        if current_section and current_data:
-            secciones[current_section] = pd.DataFrame(current_data[1:], columns=current_data[0]).to_dict(orient="records")
+            df_seccion = df.iloc[fila_datos:fila_fin].copy()
+            df_seccion.columns = df.iloc[fila_titulo]
+            df_seccion = df_seccion.dropna(how="all")  # eliminar filas completamente vacías
+            secciones[nombre] = df_seccion.to_dict(orient="records")
 
         return secciones
 
