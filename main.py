@@ -3,7 +3,7 @@ import pandas as pd
 
 app = FastAPI()
 
-@app.get("/Datos Tutor")
+@app.get("/datos-tutor")
 def leer_usuarios():
     try:
         df = pd.read_excel("Base_de_datos_tutor.xlsx", skiprows=2)
@@ -12,4 +12,3 @@ def leer_usuarios():
         return {"error": "Archivo Excel no encontrado"}
     except Exception as e:
         return {"error": str(e)}
-
