@@ -3,9 +3,13 @@ import pandas as pd
 
 app = FastAPI()
 
+@app.get("/")
+def inicio():
+    return {"mensaje": "API para consultar usuarios. Usa /usuarios o /usuarios/{DA}"}
+
 @app.get("/usuarios")
 def leer_usuarios():
-    df = pd.read_excel("Base_de_datos_tutor.xlsx", skiprows=2)
+    df = pd.read_excel("Base_de_datos_tutor.xlsx", skiprows=2)  # O ajusta skiprows según tu Excel
     return df.to_dict(orient="records")
 
 @app.get("/usuarios/{usuario_id}")
