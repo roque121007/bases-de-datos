@@ -3,7 +3,7 @@ import pandas as pd
 
 app = FastAPI()
 
-@app.get("/usuarios")
+@app.get("/Datos Tutor")
 def leer_usuarios():
     try:
         df = pd.read_excel("Base_de_datos_tutor.xlsx", skiprows=2)
