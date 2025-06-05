@@ -7,7 +7,10 @@ app = FastAPI()
 def read_root():
     return {"mensaje": "API activa"}
 
-@app.get("/datos-tutor")
-def obtener_datos():
-    df = pd.read_excel("Base_de_datos_tutor.xlsx")  # Asegúrate de que el archivo esté en el mismo directorio
-    return df.to_dict(orient="records")
+@app.get("/tutores")
+def obtener_tutores():
+    try:
+        df = pd.read_excel("Base_de_datos_tutor.xlsx")  # Asegúrate de que el nombre del archivo sea correcto y esté en el mismo directorio
+        return df.to_dict(orient="records")
+    except Exception as e:
+        return {"error": str(e)}
